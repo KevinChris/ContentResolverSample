@@ -3,4 +3,8 @@ This Project shows how to use [Content Resolver] (http://developer.android.com/g
 
 Here Content Provider and Content Resolver are separate applications. 
 
-Before looking at this repository kindly check my [Content Provider Sample Respository] (https://github.com/KevinChris/ContentProviderSample). Using ContentResolverSample application I'm fetching the data of ContentProviderSample application.
+Before looking at this repository kindly check my [ContentProviderSample Respository] (https://github.com/KevinChris/ContentProviderSample). Using ContentResolverSample application I'm fetching the data of ContentProviderSample application.
+
+# Developed By
+
+Kevin Chris
