@@ -46,44 +46,44 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Retrieve all the contacts from ContentProviderSample application through ContentResolver
+     * Retrieve all the contacts
      * @param view view of the Button
      */
     public void retrieveAll(View view) {
 
-        /**
-         * Get the ContentResolver and query to get the Contacts by prepared uri. Returns the cursor
-         */
-        Cursor cursor = getContentResolver().query(Constants.RETRIEVE_CONTACTS, DatabaseHelper.CONTACT_COLUMNS, null, null, null);
-
-        if (cursor != null && cursor.getCount() > 0) {
-            if (cursor.moveToFirst()) {
-                List<Contact> contactList = new ArrayList<>();
-                while (!cursor.isAfterLast()) {
-                    Contact contact = new Contact();
-                    contact.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.ID))));
-                    contact.setName(cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.NAME)));
-                    contact.setPhoneNo(Long.parseLong(cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.PHONE_NUMBER))));
-                    contact.setIsSynced(Boolean.valueOf(cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.CLOUD_SYNCED))));
-                    contactList.add(contact);
-                    cursor.moveToNext();
-                }
-
-                if (contactList.size() > 0) {
-                    for (Contact contact : contactList) {
-                        Toast.makeText(this, contact.getId() + " " + contact.getName() + " "
-                               + contact.getPhoneNo() + " " + contact.getIsSynced(), Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-        }
-
-        if (cursor != null) cursor.close();
+        getData(null);
     }
 
+    /**
+     * Retrieve the contacts which are in status 1
+     *
+     * @param view view of the Button
+     */
     public void retrieveSyncStateOne(View view) {
 
-        Cursor cursor = getContentResolver().query(Constants.RETRIEVE_CONTACTS_ON_SYNC_STATE, DatabaseHelper.CONTACT_COLUMNS, null, null, null);
+        String selection = DatabaseHelper.CLOUD_SYNCED + " = " + 1;
+        getData(selection);
+    }
+
+    /**
+     * Retrieve the contacts which are in status 0
+     *
+     * @param view view of the Button
+     */
+    public void retrieveSyncStateZero(View view) {
+
+        String selection = DatabaseHelper.CLOUD_SYNCED + " = " + 0;
+        getData(selection);
+    }
+
+    /**
+     * Get the data from content provider application
+     *
+     * @param selection selection statement for query
+     */
+    private void getData(String selection) {
+
+        Cursor cursor = getContentResolver().query(Constants.RETRIEVE_CONTACTS_ON_SYNC_STATE, DatabaseHelper.CONTACT_COLUMNS, selection, null, null);
 
         if (cursor != null && cursor.getCount() > 0) {
             if (cursor.moveToFirst()) {
@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
                     contact.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.ID))));
                     contact.setName(cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.NAME)));
                     contact.setPhoneNo(Long.parseLong(cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.PHONE_NUMBER))));
-                    contact.setIsSynced(Boolean.valueOf(cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.CLOUD_SYNCED))));
+                    contact.setIsSynced(Integer.valueOf(cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.CLOUD_SYNCED))));
                     contactList.add(contact);
                     cursor.moveToNext();
                 }
@@ -108,9 +108,5 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (cursor != null) cursor.close();
-
-    }
-
-    public void retrieveSyncStateZero(View view) {
     }
 }
