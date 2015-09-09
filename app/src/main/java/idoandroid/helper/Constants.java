@@ -9,14 +9,12 @@ import java.io.File;
  */
 public class Constants {
 
-    private static final int SYNCED = 0;
-    private static final int NOT_SYNCED = 1;
-
     /**
      * Authority name can be of any constant String.
      */
     final static String AUTHORITY_NAME = "ContentProviderSample.Contacts";
-
+    private static final int SYNCED = 0;
+    private static final int NOT_SYNCED = 1;
     /**
      * Base name can be of any constant String
      */
@@ -33,4 +31,10 @@ public class Constants {
      */
     public final static Uri RETRIEVE_CONTACTS_ON_SYNC_STATE = Uri.parse("content://" + AUTHORITY_NAME + File.separator
             + BASE_NAME + "contacts/sync");
+
+    /**
+     * Content URI to save a contact
+     */
+    /*public final static Uri INSERT_NEW_CONTACT = Uri.parse("content://" + AUTHORITY_NAME + File.separator
+            +BASE_NAME + "insert_contact");*/
 }
