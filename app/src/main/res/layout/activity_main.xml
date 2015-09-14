@@ -29,7 +29,8 @@
                 android:layout_alignParentTop="true"
                 android:ems="10"
                 android:hint="@string/hint_name"
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName"
+                android:maxLength="10" />
 
         </android.support.design.widget.TextInputLayout>
 

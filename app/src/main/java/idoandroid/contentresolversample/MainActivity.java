@@ -1,6 +1,7 @@
 package idoandroid.contentresolversample;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,7 +14,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import idoandroid.helper.Constants;
 import idoandroid.helper.Contact;
@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Retrieve all the contacts
+     *
      * @param view view of the Button
      */
     public void retrieveAll(View view) {
@@ -100,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (cursor != null && cursor.getCount() > 0) {
             if (cursor.moveToFirst()) {
-                List<Contact> contactList = new ArrayList<>();
+                ArrayList<Contact> contactList = new ArrayList<>();
                 while (!cursor.isAfterLast()) {
                     Contact contact = new Contact();
                     contact.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.ID))));
@@ -111,12 +112,14 @@ public class MainActivity extends AppCompatActivity {
                     cursor.moveToNext();
                 }
 
-                if (contactList.size() > 0) {
+                startActivity(new Intent(this, ItemViewer.class).putParcelableArrayListExtra("Contacts", contactList));
+
+                /*if (contactList.size() > 0) {
                     for (Contact contact : contactList) {
                         Toast.makeText(this, contact.getId() + " " + contact.getName() + " "
                                 + contact.getPhoneNo() + " " + contact.getIsSynced(), Toast.LENGTH_SHORT).show();
                     }
-                }
+                }*/
             }
         }
 
@@ -161,6 +164,9 @@ public class MainActivity extends AppCompatActivity {
 
         if (editTextContact.getText().toString().contentEquals("")) {
             layoutContact.setError("Contact can't be empty");
+            isValidated = false;
+        } else if (editTextContact.getText().toString().length() < 10) {
+            layoutContact.setError("Contact Number must have 10 digits");
             isValidated = false;
         } else {
             layoutContact.setError(null);

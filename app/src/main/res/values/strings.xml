@@ -8,4 +8,5 @@
     <string name="hint_contact">Contact No</string>
 
     <string name="button_save">Save Contact</string>
+    <string name="title_activity_item_viewer">ItemViewer</string>
 </resources>
