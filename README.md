@@ -7,7 +7,7 @@ In this application we covered,
 
 1. How to create content resolver to access the database of another Content Provider application.
 2. Retrieving the all data, data based on sync state and displaying.
-3. Stroring the record from this application.
+3. Storing the record to ContentProviderSample database from this application.
 
 # TODO
 
