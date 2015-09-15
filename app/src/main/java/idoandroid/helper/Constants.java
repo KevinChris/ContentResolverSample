@@ -23,7 +23,7 @@ public class Constants {
     /**
      * Uri to retrieve all contacts
      */
-    public final static Uri RETRIEVE_CONTACTS = Uri.parse("content://" + AUTHORITY_NAME + File.separator
+    public final static Uri CONTACTS = Uri.parse("content://" + AUTHORITY_NAME + File.separator
             + BASE_NAME + "contacts");
 
     /**

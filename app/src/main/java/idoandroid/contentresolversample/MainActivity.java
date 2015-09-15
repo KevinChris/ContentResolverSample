@@ -1,28 +1,28 @@
 package idoandroid.contentresolversample;
 
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-
 import idoandroid.helper.Constants;
-import idoandroid.helper.Contact;
 import idoandroid.helper.DatabaseHelper;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     EditText editTextName, editTextContact;
     TextInputLayout layoutName, layoutContact;
+    Button buttonSave;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,8 +32,13 @@ public class MainActivity extends AppCompatActivity {
         editTextName = (EditText) findViewById(R.id.editTextName);
         editTextContact = (EditText) findViewById(R.id.editTextContact);
 
+        buttonSave = (Button) findViewById(R.id.button);
+        buttonSave.setOnClickListener(this);
+
         layoutName = (TextInputLayout) findViewById(R.id.layoutName);
+        layoutName.setErrorEnabled(true);
         layoutContact = (TextInputLayout) findViewById(R.id.layoutContact);
+        layoutContact.setErrorEnabled(true);
     }
 
     @Override
@@ -51,7 +56,17 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_about) {
+            new AlertDialog.Builder(MainActivity.this)
+                    .setTitle(getString(R.string.about_title))
+                    .setMessage(getString(R.string.about_message))
+                    .setPositiveButton(getString(R.string.about_dismiss),
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            }).show();
             return true;
         }
 
@@ -65,7 +80,9 @@ public class MainActivity extends AppCompatActivity {
      */
     public void retrieveAll(View view) {
 
-        getData(null);
+        Intent intent = new Intent(MainActivity.this, ItemViewer.class);
+        intent.putExtra("buttonClicked", "retrieveAll");
+        startActivity(intent);
     }
 
     /**
@@ -75,8 +92,9 @@ public class MainActivity extends AppCompatActivity {
      */
     public void retrieveSyncStateOne(View view) {
 
-        String selection = DatabaseHelper.CLOUD_SYNCED + " = " + 1;
-        getData(selection);
+        Intent intent = new Intent(MainActivity.this, ItemViewer.class);
+        intent.putExtra("buttonClicked", "retrieveSyncStateOne");
+        startActivity(intent);
     }
 
     /**
@@ -86,46 +104,16 @@ public class MainActivity extends AppCompatActivity {
      */
     public void retrieveSyncStateZero(View view) {
 
-        String selection = DatabaseHelper.CLOUD_SYNCED + " = " + 0;
-        getData(selection);
+        Intent intent = new Intent(MainActivity.this, ItemViewer.class);
+        intent.putExtra("buttonClicked", "retrieveSyncStateZero");
+        startActivity(intent);
     }
 
     /**
-     * Get the data from content provider application
+     * Save the record to database on click of save button
      *
-     * @param selection selection statement for query
+     * @param view view of button
      */
-    private void getData(String selection) {
-
-        Cursor cursor = getContentResolver().query(Constants.RETRIEVE_CONTACTS_ON_SYNC_STATE, DatabaseHelper.CONTACT_COLUMNS, selection, null, null);
-
-        if (cursor != null && cursor.getCount() > 0) {
-            if (cursor.moveToFirst()) {
-                ArrayList<Contact> contactList = new ArrayList<>();
-                while (!cursor.isAfterLast()) {
-                    Contact contact = new Contact();
-                    contact.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.ID))));
-                    contact.setName(cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.NAME)));
-                    contact.setPhoneNo(Long.parseLong(cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.PHONE_NUMBER))));
-                    contact.setIsSynced(Integer.valueOf(cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.CLOUD_SYNCED))));
-                    contactList.add(contact);
-                    cursor.moveToNext();
-                }
-
-                startActivity(new Intent(this, ItemViewer.class).putParcelableArrayListExtra("Contacts", contactList));
-
-                /*if (contactList.size() > 0) {
-                    for (Contact contact : contactList) {
-                        Toast.makeText(this, contact.getId() + " " + contact.getName() + " "
-                                + contact.getPhoneNo() + " " + contact.getIsSynced(), Toast.LENGTH_SHORT).show();
-                    }
-                }*/
-            }
-        }
-
-        if (cursor != null) cursor.close();
-    }
-
     public void saveContact(View view) {
         if (validateFields()) {
             ContentValues values = new ContentValues();
@@ -133,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
             values.put(DatabaseHelper.PHONE_NUMBER, editTextContact.getText().toString().trim());
             values.put(DatabaseHelper.CLOUD_SYNCED, generateRandom());
 
-            Uri uri = getContentResolver().insert(Constants.RETRIEVE_CONTACTS, values);
+            Uri uri = getContentResolver().insert(Constants.CONTACTS, values);
 
             if (uri != null)
                 Toast.makeText(this, uri.toString(), Toast.LENGTH_SHORT).show();
@@ -142,6 +130,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Generate the random number between 0 or 1 to maintain the sync state
+     *
+     * @return 0 or 1
+     */
     private int generateRandom() {
         return (Math.random() > 0.5) ? 1 : 0;
     }
@@ -174,5 +167,14 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return isValidated;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.button:
+                saveContact(v);
+                break;
+        }
     }
 }

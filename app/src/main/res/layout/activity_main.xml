@@ -37,7 +37,8 @@
         <android.support.design.widget.TextInputLayout
             android:id="@+id/layoutContact"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
 
             <EditText
                 android:id="@+id/editTextContact"
@@ -53,8 +54,10 @@
             android:id="@+id/button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="saveContact"
-            android:text="@string/button_save" />
+            android:layout_marginTop="10dp"
+            android:text="@string/button_save"
+            android:textColor="@color/white"
+            android:theme="@style/AppTheme.ButtonStyle" />
 
     </LinearLayout>
 
