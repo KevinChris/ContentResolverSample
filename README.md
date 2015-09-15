@@ -6,16 +6,15 @@ I have already defined Content Provider in separate application in my another re
 In this application we covered,
 
 1. How to create content resolver to access the database of another Content Provider application.
-2. Retrieving the all data, data based on sync state and displaying.
+2. Retrieving all data, data based on sync state and displaying records in proper format.
 3. Storing the record to ContentProviderSample database from this application.
 
 # TODO
 
 1. Delete records.
 2. Update records.
-3. Display the retrieved records in proper format.
-4. Open files of type MIME
-5. Accessing the internal files of an another application
+3. Open files of type MIME
+4. Accessing the internal files of an another application
 
 # Blog
 
