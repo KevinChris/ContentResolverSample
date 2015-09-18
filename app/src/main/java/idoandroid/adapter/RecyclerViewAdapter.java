@@ -205,7 +205,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             String selectionArgs[] = {String.valueOf(contactList.get(getLayoutPosition()).getId())};
 
             /**
-             * Call delete method using content resolver
+             * Delete method
              */
             long deletedRows = context.getContentResolver().delete(Constants.CONTACTS, where, selectionArgs);
 

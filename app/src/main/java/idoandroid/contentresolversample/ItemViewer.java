@@ -46,20 +46,22 @@ public class ItemViewer extends AppCompatActivity {
              * If it's retrieve all then get all data from database
              */
             if (receivedIntent.contentEquals("retrieveAll"))
-                getData(null);
+                getData(null, null);
             /**
              * If it's sync state one retrieve only the data which are sync state is one
              */
             else if (receivedIntent.contentEquals("retrieveSyncStateOne")) {
-                String selection = DatabaseHelper.CLOUD_SYNCED + " = " + 1;
-                getData(selection);
+                String selection = DatabaseHelper.CLOUD_SYNCED + " = ?";
+                String[] selectionArgs = {String.valueOf(1)};
+                getData(selection, selectionArgs);
             }
             /**
              * If sync state is zero then retrieve data accordingly
              */
             else if (receivedIntent.contentEquals("retrieveSyncStateZero")) {
-                String selection = DatabaseHelper.CLOUD_SYNCED + " = " + 0;
-                getData(selection);
+                String selection = DatabaseHelper.CLOUD_SYNCED + " = ?";
+                String[] selectionArgs = {String.valueOf(0)};
+                getData(selection, selectionArgs);
             }
         }
     }
@@ -69,13 +71,13 @@ public class ItemViewer extends AppCompatActivity {
      *
      * @param selection selection statement for query
      */
-    private void getData(String selection) {
+    private void getData(String selection, String[] selectionArgs) {
 
         /**
          * Query to get the cursor from database
          */
         Cursor cursor = getContentResolver().query(Constants.RETRIEVE_CONTACTS_ON_SYNC_STATE,
-                DatabaseHelper.CONTACT_COLUMNS, selection, null, null);
+                DatabaseHelper.CONTACT_COLUMNS, selection, selectionArgs, null);
 
         if (cursor != null && cursor.getCount() > 0) {
             if (cursor.moveToFirst()) {
